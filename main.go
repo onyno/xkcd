@@ -24,7 +24,7 @@ func main() {
 		log.Fatalf("minimum length of '%d' is invalid, can not be greater than the maximum '%d'", *min, *max)
 	}
 
-	validWord := func(s string) bool { return len(s) > *min && len(s) < *max }
+	validWord := func(s string) bool { return len(s) >= *min && len(s) <= *max }
 
 	var words []string
 	if *useCommonWords {
