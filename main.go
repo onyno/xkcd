@@ -18,6 +18,12 @@ func main() {
 	useCommonWords := flag.Bool("common", true, "use common words")
 	flag.Parse()
 
+	if *min < 0 {
+		log.Fatalf("minimum length of '%d' is invalid", *min)
+	} else if *min > *max {
+		log.Fatalf("minimum length of '%d' is invalid, can not be greater than the maximum '%d'", *min, *max)
+	}
+
 	validWord := func(s string) bool { return len(s) > *min && len(s) < *max }
 
 	var words []string
@@ -27,10 +33,15 @@ func main() {
 		words = loadSuitableWords(validWord)
 	}
 
+	n := len(words)
+	if n == 0 {
+		log.Fatalf("no words matching criteria found")
+	}
+
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	passwords := []string{}
 	for i := 0; i < *num; i++ {
-		word := words[r.Intn(len(words))]
+		word := words[r.Intn(n)]
 		passwords = append(passwords, strings.ToLower(word))
 	}
 	password := strings.Join(passwords, "-")
